@@ -24,7 +24,7 @@ def import_music_from_folder(folder_path: str, mode: str = "skip"):
     Additionally, write folder-based tags into tag.db.
     """
 
-    BASE_DIR = Path(__file__).resolve().parent.parent
+    BASE_DIR = Path(__file__).parents[1]
 
     MUSIC_DB_URL = f"sqlite:///{BASE_DIR}/database/music.db"
     TAG_DB_URL = f"sqlite:///{BASE_DIR}/database/tag.db"
@@ -207,4 +207,3 @@ def resolve_artist(music_session, artist_name: str, origin: str | None = None) -
     ).ask()
 
     return selected_artist
-

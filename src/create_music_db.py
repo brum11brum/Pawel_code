@@ -8,6 +8,13 @@ Base = declarative_base()
 # Artist table
 # --------------------
 class Artist(Base):
+    """
+    To moja klasa na artyste.
+
+    :param id: artists id
+    :param name: artists hobby
+    :param origin: you f***ing racist
+    """
     __tablename__ = "artists"
 
     id = Column(Integer, primary_key=True)

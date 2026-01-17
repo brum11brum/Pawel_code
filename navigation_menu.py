@@ -1,15 +1,23 @@
 import questionary
-from src.scan_and_import import import_music_from_folder
-from src.read_music_db import read_music_db
+
+from src.create_yt_playlist import create_yt_playlist
+from src.get_songs import get_songs
 from src.get_songs import get_songs_by_language
 from src.get_songs import get_songs_by_tag, get_all_artists, get_songs_by_artist
-from src.get_songs import get_songs
-from src.create_yt_playlist import create_yt_playlist
-from src.music_db_manager import create_music_db, rename_artist, delete_artist_and_songs, delete_song
-from src.tag_db_manager import create_tag_db, delete_tag
 from src.import_from_txt import load_songs_from_txt
+from src.music_db_manager import create_music_db, rename_artist, delete_artist_and_songs, delete_song
+from src.scan_and_import import import_music_from_folder
+from src.tag_db_manager import create_tag_db, delete_tag
+
 
 def main_loop():
+    action_map = {
+        "Get artists": get_artists,
+        "Get songs": get_songs_navigation,
+        "Import songs": import_songs,
+        "Database manager": database_manager,
+    }
+
     while True:
         choice = questionary.select(
             "What do you want to do?",
@@ -23,28 +31,59 @@ def main_loop():
             ]
         ).ask()
 
-        if choice == "Get artists":
-            get_artists()
-        elif choice == "Get songs":
-            get_songs_navigation()
-        elif choice == "Create playlist":
+        # match choice:
+        #     case "Get artists":
+        #         get_artists()
+        #     case "Get songs":
+        #         get_songs_navigation()
+        #     case "Create playlist":
+        #         print("Choose the name of the playlsit:")
+        #         playlist_name = input()
+        #         songs = load_songs_from_txt("../songs.txt")
+        #         print(songs)
+        #         create_yt_playlist(songs, playlist_name)
+        #     case "Import songs":
+        #         import_songs()
+        #     case "Database manager":
+        #         database_manager()
+        #     case _:
+        #         break
+
+        if choice == "Create playlist":
             print("Choose the name of the playlsit:")
             playlist_name = input()
             songs = load_songs_from_txt("../songs.txt")
             print(songs)
             create_yt_playlist(songs, playlist_name)
-        elif choice == "Import songs":
-            import_songs()
-        elif choice == "Database manager":
-            database_manager()
         elif choice == "Exit":
             break
+        else:
+            action_map[choice]()
+
+        # if choice == "Get artists":
+        #     get_artists()
+        # elif choice == "Get songs":
+        #     get_songs_navigation()
+        # elif choice == "Create playlist":
+        #     print("Choose the name of the playlsit:")
+        #     playlist_name = input()
+        #     songs = load_songs_from_txt("../songs.txt")
+        #     print(songs)
+        #     create_yt_playlist(songs, playlist_name)
+        # elif choice == "Import songs":
+        #     import_songs()
+        # elif choice == "Database manager":
+        #     database_manager()
+        # elif choice == "Exit":
+        #     break
+
 
 def get_artists():
     print("Warning - As for now this code lists only all artists")
     artists = get_all_artists()
     for artist in artists:
         print(f"- {artist.name}")
+
 
 def get_songs_navigation():
     choice = questionary.select(
@@ -80,8 +119,10 @@ def get_songs_navigation():
         songs = get_songs_by_tag(tags)
         print(songs)
 
+
 def import_songs():
-    import_music_from_folder("/home/shianman/Music", mode = "update")
+    import_music_from_folder("/home/shianman/Music", mode="update")
+
 
 def database_manager():
     choice = questionary.select(
@@ -98,6 +139,7 @@ def database_manager():
 
     elif choice == "Tag.db":
         database_manager_tag_db()
+
 
 def database_manager_music_db():
     choice = questionary.select(
@@ -128,6 +170,7 @@ def database_manager_music_db():
         song = questionary.text("Song name:").ask()
         delete_song(song, artist)
 
+
 def database_manager_tag_db():
     choice = questionary.select(
         "Database Manager: Tag.db:",
@@ -143,12 +186,13 @@ def database_manager_tag_db():
 
     elif choice == "Remove tag":
         tag = questionary.text("Tag:").ask()
-        print(type(tag)) #debug
+        print(type(tag))  # debug
         delete_tag(tag)
-    
-def main():
 
+
+def main():
     print("This code can't be run directly")
+
 
 if __name__ == "__main__":
     main()

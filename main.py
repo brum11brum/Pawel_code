@@ -1,7 +1,7 @@
-from navigation_menu import main_loop as navigation
+import navigation_menu
 
 def main_loop():
-    navigation()
+    navigation_menu.main_loop()
 
 
 def main():
